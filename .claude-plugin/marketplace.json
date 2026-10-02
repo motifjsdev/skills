@@ -1,0 +1,20 @@
+{
+  "name": "motifjs",
+  "description": "MotifJS plugins for Claude Code",
+  "owner": { "name": "MotifJS", "url": "https://motifjs.com" },
+  "plugins": [
+    {
+      "name": "motifjs",
+      "source": "./skills",
+      "strict": false,
+      "skills": ["./motifjs"],
+      "description": "Teaches Claude to build, modify and debug MotifJS applications (@motifx/core + @motifx/compiler): components, reactivity, JSX bindings, router, dependency injection, virtualization and error codes.",
+      "author": { "name": "Ekrem Erşahin", "url": "https://motifjs.com" },
+      "homepage": "https://motifjs.com",
+      "repository": "https://github.com/motifjsdev/skills",
+      "license": "MIT",
+      "keywords": ["motifjs", "motifx", "ui-framework", "jsx", "reactivity", "router"],
+      "category": "development"
+    }
+  ]
+}
