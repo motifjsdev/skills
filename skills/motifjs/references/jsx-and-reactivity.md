@@ -77,6 +77,12 @@ An object or array value is written as one attribute value, converted to text: `
 array writes the same text. On a method-like prop the value is the argument instead (see
 [Method-like props](#method-like-props)).
 
+**Security:** attributes written on the tag and `attr.add` values are written without filtering. When a
+URL attribute (`href`, `src`, `action`, `formaction`) is bound to user data, a `javascript:` value runs
+code on click, so validate the scheme first, e.g.
+`href={() => /^(https?:|mailto:|\/|#|\.)/i.test(u.trim()) ? u : '#'}`. `attr.add({ innerHTML })` writes
+HTML as is, like `x-html`. Only a spread drops `innerHTML` and `javascript:` URLs on its own.
+
 **One deliberate exception: a ternary in attribute/prop position is always wrapped lazily** —
 `mode={x ? 'a' : 'b'}` compiles to `mode: () => x ? 'a' : 'b'`, on DOM tags and component tags alike,
 so the expression stays reactive instead of freezing at `view()` time. The contract for the receiving
