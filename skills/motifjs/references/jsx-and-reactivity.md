@@ -133,6 +133,9 @@ On a **plain DOM tag** the spread object is applied as if the attributes were wr
 `selected` → property binding, `on*` (`onclick`, `onClick`, `oninput:once`) → DOM listener, everything else
 → attribute. Getters stay live; functions that take parameters (`renderItem: (x) => …`) are skipped.
 Inline attributes are applied after the spread, so `<div {...p} id="fixed"/>` keeps `id="fixed"`.
+A spread never sets `innerHTML` (dev warning `MJX124`) and never writes a `javascript:` URL to `href`/`src`/
+`action`/`formaction`/`xlink:href` (dev warning `MJX125`; a getter's current value is removed). Use `x-html` for
+trusted HTML and write an intended `javascript:` link inline on the tag; inline attributes are not filtered.
 
 On a **component tag** (`<Card {...props}/>`, `<Card class="x" id="y"/>`) only the **common attributes**
 fall through to the component's root element (Vue-style attribute fallthrough): `class`/`className` (merged
