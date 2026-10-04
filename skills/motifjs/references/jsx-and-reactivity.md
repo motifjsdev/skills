@@ -8,7 +8,7 @@ import { reactive, useModel, createSignal, createComputed, effect, untracked, de
 
 | API | Notes |
 |---|---|
-| `reactive(obj)` / `useModel(obj)` | Deep proxy. Read = tracked, write = triggers. Nested objects and arrays (`push`, `splice`, sort, index assignment) are tracked. A function-valued field is returned as the function itself; a binding that ends up with a function value calls it (unbound, so no `this`) — `{state.fn}`, `bindings.add(prop, state, 'fn')`, attribute getters — but your own code must call it: `() => state.fn() + '!'`. |
+| `reactive(obj)` / `useModel(obj)` | Deep proxy. Read = tracked, write = triggers. Nested objects and arrays (`push`, `splice`, sort, index assignment) are tracked, and so are `Map`, `Set`, `WeakMap`, `WeakSet` (see Reactive collections). `Date`, `RegExp` and frozen objects are returned as is (not tracked; write a new reference). A function-valued field is returned as the function itself; a binding that ends up with a function value calls it (unbound, so no `this`) — `{state.fn}`, `bindings.add(prop, state, 'fn')`, attribute getters — but your own code must call it: `() => state.fn() + '!'`. |
 | `createSignal(v)` / `new Signal(v, equals?)` / `Signal.create(v, equals?)` | `.value` get/set, `.peek()`, `.update(fn)`, `.mutate(fn)`, `.notify()`, `.asReadonly()`, `.dispose()`. |
 | `createComputed(fn)` | Eager, cached derived value: computed at creation and recomputed on dependency change even when unread; `.value`, `.peek()`, `.dispose()`. |
 | `createLazyComputed(fn)` | Lazy derived value: nothing is computed until `.value` is read; a dependency change only marks it dirty (synchronously) and wakes its readers; `.value`, `.peek()`, `.isDirty`, `.dispose()`. |
@@ -27,6 +27,29 @@ Module-level stores are idiomatic:
 // store/session.ts
 export const session = reactive({ user: null as User | null, theme: 'light' });
 ```
+
+### Reactive collections
+
+`Map`, `Set`, `WeakMap` and `WeakSet` inside a reactive model (or passed to `reactive()` directly) are
+reactive; mutate them in place, no need to replace the whole collection.
+
+```tsx
+const state = reactive({ users: new Map<string, User>(), selected: new Set<string>() });
+state.users.set(u.id, u);
+state.selected.add(u.id);
+state.users.get(u.id)!.name = 'Grace';           // values read out are reactive proxies
+<ul>{[...state.users.values()].map(u =>
+  <li key={u.id} class={state.selected.has(u.id) ? 'selected' : ''}>{u.name}</li>)}</ul>
+```
+
+- `get(k)` / `has(k)` rerun only when that key changes; `size`, `forEach`, `values()`, `entries()`,
+  `for…of` and spread rerun on any content change; `Map.keys()` reruns only when a key is added or removed.
+- No-op writes trigger nothing: `set` with an `Object.is`-equal value, `add` of a present element,
+  `delete` of a missing key, `clear` on an empty collection.
+- `Map` values and `Set` elements come out as reactive proxies; `Map` keys come out raw. Proxies written
+  in are stored raw, and object keys match whether given raw or reactive.
+- Identity, `instanceof`, chaining and `Object.prototype.toString` behave natively; `WeakMap`/`WeakSet`
+  expose only their own methods.
 
 ## Expression forms inside JSX
 
