@@ -104,7 +104,7 @@ array writes the same text. On a method-like prop the value is the argument inst
 URL attribute (`href`, `src`, `action`, `formaction`) is bound to user data, a `javascript:` value runs
 code on click, so validate the scheme first, e.g.
 `href={() => /^(https?:|mailto:|\/|#|\.)/i.test(u.trim()) ? u : '#'}`. `attr.add({ innerHTML })` writes
-HTML as is, like `x-html`. Only a spread drops `innerHTML` and `javascript:` URLs on its own.
+HTML as is, like `x-html`. Only a spread drops `innerHTML`, `srcdoc` and `javascript:` URLs on its own.
 
 **One deliberate exception: a ternary in attribute/prop position is always wrapped lazily** —
 `mode={x ? 'a' : 'b'}` compiles to `mode: () => x ? 'a' : 'b'`, on DOM tags and component tags alike,
@@ -162,8 +162,8 @@ On a **plain DOM tag** the spread object is applied as if the attributes were wr
 `selected` → property binding, `on*` (`onclick`, `onClick`, `oninput:once`) → DOM listener, everything else
 → attribute. Getters stay live; functions that take parameters (`renderItem: (x) => …`) are skipped.
 Inline attributes are applied after the spread, so `<div {...p} id="fixed"/>` keeps `id="fixed"`.
-A spread never sets `innerHTML` (dev warning `MJX124`) and never writes a `javascript:` URL to `href`/`src`/
-`action`/`formaction`/`xlink:href` (dev warning `MJX125`; a getter's current value is removed). Use `x-html` for
+A spread never sets `innerHTML` or `srcdoc` (dev warning `MJX124`) and never writes a `javascript:` URL to `href`/`src`/
+`action`/`formaction`/`xlink:href` (dev warning `MJX125`; a getter's current value is removed). Use `x-html` (or inline `srcdoc`) for
 trusted HTML and write an intended `javascript:` link inline on the tag; inline attributes are not filtered.
 
 On a **component tag** (`<Card {...props}/>`, `<Card class="x" id="y"/>`) only the **common attributes**

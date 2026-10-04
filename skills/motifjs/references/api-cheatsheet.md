@@ -189,7 +189,7 @@ to `errorHandler.addListener` (original error in `cause`); "dev warning" prints 
 | `MJX121` | dev warning | compiled code's compiler contract differs from the `@motifx/core` runtime |
 | `MJX122` | reported | a component hook, `ref` callback or `x:` lifecycle listener threw (`The component onBuilt hook threw.`) |
 | `MJX123` | reported | an event handler or application event listener threw (`The 'click' event handler threw.`) |
-| `MJX124` | dev warning | a spread object on a DOM tag carried `innerHTML`; the key was ignored |
+| `MJX124` | dev warning | a spread object on a DOM tag carried `innerHTML` or `srcdoc`; the key was ignored |
 | `MJX125` | dev warning | a spread object on a DOM tag carried a `javascript:` URL for `href`/`src`/`action`/`formaction`/`xlink:href`; the value was ignored |
 | `MJX201` | thrown | a list `renderFn` returned something that is not a component, class or factory |
 | `MJX202` | dev warning | duplicate list `key` (rendering unaffected) |
