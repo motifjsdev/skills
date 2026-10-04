@@ -109,12 +109,13 @@ asyncTracking                                                    // used by comp
 
 `import { debugGetDeps, debugGetDepMap } from '@motifx/core/devtools'` — dependency maps of reactive objects (tests/diagnostics).
 
-Devtools flag: `?devtools=1` in the page URL or `window.__MOTIF_DEVTOOLS__ = true`, read when `app.useRouter()`
-runs. It turns on dev warnings (except `MJX301`, which needs `useDevelopment(true)`) and the route linter, and
-exposes `window.__motifDevBus` (`getWarnings()` → collected `{ code, message, details }`; `on(fn)` receives
-`{ type: 'warning', payload }`). Ctrl+\` / Cmd+\` toggles a fixed overlay box at the bottom of the page (visible
-from the start with `useDevelopment(true)`); the box renders no content, so read warnings from the console or
-`getWarnings()`.
+Devtools: `app.useDevelopment(true)` turns devtools on together with the dev warnings and the route linter, and
+`useDevelopment(false)` turns them off. Setting `window.__MOTIF_DEVTOOLS__ = true` before `app.useRouter()` also
+turns them on, keeps them on after `useDevelopment(false)`, and enables dev warnings (except `MJX301`, which needs
+`useDevelopment(true)`) and the route linter. A URL parameter never turns devtools on. While devtools are on,
+`window.__motifDevBus` is available (`getWarnings()` → collected `{ code, message, details }`; `on(fn)` receives
+`{ type: 'warning', payload }`). With the global flag, Ctrl+\` / Cmd+\` toggles an overlay box at the bottom of the
+page; the box renders no content, so read warnings from the console or `getWarnings()`.
 
 ## DI
 

@@ -124,7 +124,7 @@ const builder = Application.CreateBuilder();   // only one builder/app per page
 builder.services.addSingleton(Api, Api);       // optional DI registrations
 const app = builder.build();                   // also auto-registers @Injectable classes
 
-app.useDevelopment(true);                      // MJX warnings, route linter (call before useRouter)
+app.useDevelopment(true);                      // MJX warnings, route linter, devtools (call before useRouter)
 app.useLogging(true);                          // console error logging (on by default)
 app.useReactiveMonitor({ enabled: true, threshold: 200 }); // dev-only leak warnings
 
