@@ -181,6 +181,7 @@ to `errorHandler.addListener` (original error in `cause`); "dev warning" prints 
 | `MJX101` | thrown | creating an element with no `document` (SSR / plain Node) |
 | `MJX108` | value | `doWork(p)` resolves to this `MotifError` (does not reject) when the component was disposed meanwhile |
 | `MJX110` / `MJX111` | `Lazy` load error | `timeoutMs` elapsed / `signal` aborted; passed to `onError` (after a timeout `Fallbackview` is shown) |
+| `MJX126` | reported | a `Lazy` load failed with no `Fallbackview`; the host was cleared, original error in `cause` |
 | `MJX121` | dev warning | compiled code's compiler contract differs from the `@motifx/core` runtime |
 | `MJX122` | reported | a component hook, `ref` callback or `x:` lifecycle listener threw (`The component onBuilt hook threw.`) |
 | `MJX123` | reported | an event handler or application event listener threw (`The 'click' event handler threw.`) |

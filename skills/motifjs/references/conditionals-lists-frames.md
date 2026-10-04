@@ -53,11 +53,13 @@ content too heavy to keep in memory while hidden. Otherwise `x-wait` is cheaper 
 {state.level > 2 ? <Gold/> : state.level > 1 ? <Silver/> : <Bronze/>}   // nested OK
 ```
 Compiled to `bindings.ternary`; each branch receives a `Frame` and `navigate()`s into it. The old
-branch is disposed **without a leave transition** (`skipLeaveTransition: true`; running animations on it
-are cancelled); the same holds for `&&`, `{this.method()}`, `switch` swaps and every `frame.navigate`.
-Animate a swap with `x-display`/`x-wait` on kept instances instead. A branch is rebuilt only when its condition
-value changes (`Object.is`); in a nested ternary the inner branch is kept while the outer value stays
-the same.
+branch's running animations are cancelled, then it is disposed and **plays its leave transition** if it
+has one; the new branch is placed at once and the order follows the nearest element ancestor's
+transition `mode` (`concurrent` default, `out-in`, `in-out` — `<div transition={{ mode: 'out-in' }}>`
+around the expression works). The same holds for `&&`, `{this.method()}`, `switch` swaps and every
+`frame.navigate`. Without a leave transition the new branch is placed after the old one has finished
+disposing. A branch is rebuilt only when its condition value changes (`Object.is`); in a nested ternary
+the inner branch is kept while the outer value stays the same.
 
 **Props inside a branch are snapshots.** The branch is built once and kept while the condition value
 stays the same, so a component prop written as a plain expression (`<Content data={state.data} />`,
@@ -176,7 +178,7 @@ class Shell extends Component<HTMLDivElement> {
 - A `Promise` (e.g. `import('./Reports')`) is also accepted at runtime and wrapped in `Lazy`; the
   parameter is typed as a component, so cast it. `navigateLazy` is the typed form.
 - `keepOldControl = true` keeps the previous content instead of disposing it.
-- `frame.flush()` disposes the current content (no leave transition) without navigating;
+- `frame.flush()` disposes the current content (playing its leave transition) without navigating;
   `frame.current` still references the disposed content.
 
 ## `Lazy` — dynamic import as a component
@@ -190,7 +192,9 @@ import { Lazy } from '@motifx/core';
 `LazyOptions`: `Loaderview`, `Placeholderview`, `Fallbackview`, `minDelayMs`, `timeoutMs`, `signal`,
 `onError`, `mapResult` (default: `module.default` when it is a function, otherwise the whole resolved
 value), `retry` (count or `{ count, delayMs?, whenOnline? }`),
-`onRetry(attempt, error)`.
+`onRetry(attempt, error)`. On failure `onError(err)` runs first; then `Fallbackview` is shown if set,
+otherwise the host is cleared and the failure is reported as `MJX126` (`errorHandler.report`, original
+error in `cause`). An aborted load is never reported.
 
 ## `Transport` / `TransportTo` — portal-style slots
 
