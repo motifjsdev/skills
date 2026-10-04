@@ -6,7 +6,7 @@
 <button onclick={() => save()}>Save</button>
 <input oninput={(e) => state.q = (e.target as HTMLInputElement).value} />
 <form onsubmit={(sender, e) => { e.preventDefault(); submit(); }}>…</form>
-<a onclick={(s, e) => { s.context.navigate('/home'); return false; }}>Home</a>
+<a href="/home" onclick:prevent={(s, e) => s.context.navigate('/home')}>Home</a>
 ```
 
 - Names are lowercase DOM names (`onclick`, `onchange`, `onkeydown`, `onpointerdown`). On a plain tag any
@@ -21,7 +21,9 @@
   `errorHandler.addListener(fn)`. Other listeners of the event still run.
 - Handler arity decides the signature: 1 param → `(event)`, 2 params → `(sender, event)` where
   `sender` is the `ComponentBase` (`sender.element`, `sender.context`, `sender.props`).
-- Returning `false` or `{ cancel: true }` → `preventDefault()` + `stopPropagation()`. These (and the
+- Returning `{ cancel: true }` → `preventDefault()` + `stopPropagation()`. Every other return value,
+  `false` included, is ignored: `onkeydown={(e) => e.key === 'Enter' && submit()}` leaves other keys
+  alone. To cancel use `:prevent` / `:stop`, `e.preventDefault()` or `{ cancel: true }`. These (and the
   `:prevent` / `:stop` modifiers) are called only when the event object has them: with
   `motif.trigger('name', { … })` and a plain data object nothing is called and no error is raised.
 - Listeners are removed automatically on dispose.
