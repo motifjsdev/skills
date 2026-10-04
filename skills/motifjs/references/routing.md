@@ -23,8 +23,8 @@ export const routes: RouteItem[] = [
 ];
 ```
 
-`RouteItem` fields: `path`, `control` (component class, instance, `() => Component`,
-`() => import(...)`, or a Promise; required unless the route has `redirect`), `childs`, `name`,
+`RouteItem` fields: `path`, `control` (component class, instance, `() => Component`, an Options API
+factory `() => ({ el, view })`, `() => import(...)`, or a Promise; required unless the route has `redirect`), `childs`, `name`,
 `meta`, `extend`, `keepAlive`, `redirect`, `alias`, `validate(e) => boolean`, `onShow(component)`,
 `onEntering(ctx)`, `onEnter(ctx)`, `onLeave(ctx)`, `onUpdate(ctx)`. `RouteItem` is a type that
 requires `control` or `redirect` (a route with neither is a TS error). `meta` and `extend` are merged
