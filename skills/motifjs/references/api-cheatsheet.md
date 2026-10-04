@@ -154,10 +154,14 @@ array); the source is never mutated. Arrays have no LINQ methods of their own.
 `errorHandler` (`ErrorHandler`: `addListener(fn) → unbind`, `setUnexpectedErrorHandler`, `safeCall`…),
 `setUnexpectedErrorHandler(fn)` (receives uncoded errors caught by `safeCall`/`safeCallAsync` and by `Emitter` listeners, which also reach `addListener` as they are; the default rethrows in a `setTimeout`; coded reports such as `MJX122`/`MJX123`/`MJX208` never reach it),
 `safeCall(fn, context, fallback?)`, `safeCallAsync`, `safeCallSilent`,
-`Resilience.create.retry({...}).timeout({ timeoutMs }).circuitBreaker(...).bulkhead(...).rateLimiter(...).fallback({ fallback }).execute(fn)`,
+`Resilience.create.retry({...}).timeout({ timeoutMs }).circuitBreaker(...).bulkhead(...).rateLimiter(...).fallback({ fallback }).execute(fn)`
+(`rateLimiter` defaults: `tokensPerInterval` 1, `intervalMs` 1000, `capacity` = `tokensPerInterval`),
 `decorate(policy, fn)`, `dom.createElement/createElementNS/createComment/createTextNode`,
 `NodeTypes`, `Emitter<T>` / `Event`, `preProcessing`.
-Types: `EventArgs { cancel }`, `TransitionProps`, `IBaseProp<T>`, `LazyOptions`, `Virtualization*` types.
+Types: `EventArgs { cancel }`, `TransitionProps`, `IBaseProp<T>`, `LazyOptions`, `Virtualization*` types,
+resilience types `RetryOptions`, `TimeoutOptions`, `CircuitBreakerOptions`, `CircuitState`, `BulkheadOptions`,
+`RateLimiterOptions`, `FallbackOptions<T>`, `ResiliencePolicy` (what `decorate` accepts; `Resilience` implements it),
+`ResilienceAction<T>`, `ResilienceContext`.
 
 `Emitter<T>`: `fire(value)`, `event` (an `Event<T>`: `(listener, thisArgs?, disposables?) => IDisposable`),
 `dispose()`. A service exposing an event:
