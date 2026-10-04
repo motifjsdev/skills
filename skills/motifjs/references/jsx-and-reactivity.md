@@ -167,7 +167,7 @@ A spread never sets `innerHTML` or `srcdoc` (dev warning `MJX124`) and never wri
 trusted HTML and write an intended `javascript:` link inline on the tag; inline attributes are not filtered.
 
 On a **component tag** (`<Card {...props}/>`, `<Card class="x" id="y"/>`) only the **common attributes**
-fall through to the component's root element (Vue-style attribute fallthrough): `class`/`className` (merged
+fall through to the component's root element (attribute fallthrough): `class`/`className` (merged
 with the component's own classes), `style`, `id`, `tabindex`, `role`, `aria-*`, `data-*`. Getters
 stay live. Data/callback props (`items`, `label`, `onSave`, `disabled`) are never written to the root, and
 neither is `title` — deliberately, since it is a very common data prop name (`<Card title="…"/>`).

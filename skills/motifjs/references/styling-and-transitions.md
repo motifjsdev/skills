@@ -30,7 +30,7 @@ Tailwind/Bootstrap/plain CSS all work — MotifJS does not touch CSS.
 
 Enter runs when a component is inserted/shown; leave runs before it is removed/hidden.
 
-### CSS class transitions (Vue naming)
+### CSS class transitions
 
 ```tsx
 <div transition="fade">…</div>
