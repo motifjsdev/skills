@@ -63,7 +63,7 @@ isVisible; isWait (get/set)
 dispose(opts?: { deep?, skipLeaveTransition? }): Promise<void>; disposeAsync(opts?)
 using(promise, onfulfilled?, onrejected?)   // callbacks skipped once disposed
 doWork(promise): Promise<T>                 // resolves to an Error instance (does not reject) if disposed meanwhile
-getService<T>(token): T | null; serviceProvider; useModel(obj)
+getService(token): T | null  // T from a class token; getService<T>(stringOrSymbol) otherwise. serviceProvider; useModel(obj)
 $(selector): { fromDom(), fromComponent() }; siblings.{all,next,prev,nextAll,prevAll}()
 isBuilt, isInitialized (false in onInitializing, true from onInitialized on), isConfigured, isDisposed, isPainted
 
@@ -122,7 +122,7 @@ page; the box renders no content, so read warnings from the console or `getWarni
 ```ts
 ServiceCollection: addSingleton/addScoped/addTransient(token, impl), tryAdd*(token, impl): boolean, replace(token, impl, lifetime?), remove(token), has(token), reset(), getDescriptor(token), buildServiceProvider()
 ServiceProvider: get(token), getAsync(token), createScope(name?), dispose()
-Injectable({ lifetime?, deps? }), inject(token) → instance (only during provider construction, else MJX409), FromService(token) → instance | null (dev warning MJX414 on failure); add*(token, fn) with a non-constructible fn → MJX413
+Injectable({ lifetime?, deps? }), inject(token) → instance (only during provider construction, else MJX409), FromService(token) → instance | null (dev warning MJX414 on failure); all three type the result from a class token, `<T>` only for string/symbol tokens; add*(token, fn) with a non-constructible fn → MJX413
 type ServiceLifetime = 'transient' | 'singleton' | 'scoped'
 ```
 

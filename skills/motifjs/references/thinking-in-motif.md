@@ -64,7 +64,7 @@ scope is what produces three levels of `auth={this.auth}`.
 | What is passed | Tool | Example |
 |---|---|---|
 | What belongs to the parent/child relation: which item this instance represents, which variant it shows, which slot content it hosts | prop | `<FavoriteButton article={item} variant="compact" />` |
-| An app-wide concern the parent should not care about: session, API, settings, the page model | DI, resolved by the component that needs it | `auth = this.getService<AuthService>(AuthService)!` or `FromService(AuthService)` |
+| An app-wide concern the parent should not care about: session, API, settings, the page model | DI, resolved by the component that needs it | `auth = this.getService(AuthService)!` or `FromService(AuthService)` |
 | Live data read and written by several components | the same reactive object, handed once | `article` shared by the banner, the bottom meta and every preview |
 | A notification between parts far apart in the tree | `this.context.fire` / `this.context.on` | `context.fire('article:deleted', slug)` |
 | A choice made inside a small reusable part | callback prop | `<TagInput onAdd={(tag) => model.addTag(tag)} />` |
@@ -153,9 +153,9 @@ versions use only valid MotifJS. The first is structured by habit, the second by
 
 ```tsx
 export class ArticlePage extends Component<HTMLDivElement> {
-  private auth = this.getService<AuthService>(AuthService)!;
-  private articles = this.getService<ArticlesService>(ArticlesService)!;
-  private comments = this.getService<CommentsService>(CommentsService)!;
+  private auth = this.getService(AuthService)!;
+  private articles = this.getService(ArticlesService)!;
+  private comments = this.getService(CommentsService)!;
   private slug = String(useNavigation().params.slug ?? '');
 
   state = reactive({
@@ -315,7 +315,7 @@ import { ArticlePageModel } from './article-page.model';
 import { CommentCard } from './CommentCard';
 
 export class ArticlePage extends Component<HTMLDivElement> {
-  model = this.getService<ArticlePageModel>(ArticlePageModel)!;
+  model = this.getService(ArticlePageModel)!;
 
   override onConfig() {
     void this.model.load(String(useNavigation().params.slug ?? ''));
