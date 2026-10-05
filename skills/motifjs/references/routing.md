@@ -29,6 +29,9 @@ factory `() => ({ el, view })`, `() => import(...)`, or a Promise; required unle
 `onEntering(ctx)`, `onEnter(ctx)`, `onLeave(ctx)`, `onUpdate(ctx)`. `RouteItem` is a type that
 requires `control` or `redirect` (a route with neither is a TS error). `meta` and `extend` are merged
 along the matched chain (a layout's `meta.requiresAuth` is seen by its children).
+A lazily imported page must be the module's `export default`; for a named export map it:
+`() => import('../pages/Home').then(m => m.HomePage)`. A module without `default` (or a non-component)
+throws `MJX127`, reported as the `cause` of `MJX304`, and `fallbacks.error` is shown.
 `extend.targetOutlet: 'name'` mounts the route into the named `<RouterView name="name">` instead of
 `default`. `validate(e)` runs for every route of a candidate chain (layouts included) and receives
 `{ uri, key, routes, params }` (`key`: the route's `name`, else its full path; `params`: the matched

@@ -186,6 +186,7 @@ to `errorHandler.addListener` (original error in `cause`); "dev warning" prints 
 | `MJX108` | value | `doWork(p)` resolves to this `MotifError` (does not reject) when the component was disposed meanwhile |
 | `MJX110` / `MJX111` | `Lazy` load error | `timeoutMs` elapsed / `signal` aborted; passed to `onError` (after a timeout `Fallbackview` is shown) |
 | `MJX126` | reported | a `Lazy` load failed with no `Fallbackview`; the host was cleared, original error in `cause` |
+| `MJX127` | thrown | a lazy route or `Lazy` loaded a module with no `default` export (or a non-component); router: `cause` of `MJX304` + error route; `Lazy`: load failure. Fix: `export default`, or `() => import('./X').then(m => m.X)` |
 | `MJX121` | dev warning | compiled code's compiler contract differs from the `@motifx/core` runtime |
 | `MJX122` | reported | a component hook, `ref` callback or `x:` lifecycle listener threw (`The component onBuilt hook threw.`) |
 | `MJX123` | reported | an event handler or application event listener threw (`The 'click' event handler threw.`) |
