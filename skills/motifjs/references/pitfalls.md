@@ -109,7 +109,8 @@
   never warned), `MJX003` (`.map()` item without `key`; rows are matched by the item object, so the key only feeds the
   `MJX202` duplicate check), `MJX004` (`some`/`every`/`find` on a `this.`
   rooted array inside a reactive getter loses dependencies), `MJX007` (unknown `x-*` name; it is passed on
-  as an `on<name>` prop). Disable with
+  as an `on<name>` prop), `MJX015` (a class component override of `build`/`dispose`/`style`/… that
+  can finish without reaching `super`; checked in `.ts`/`.js` files too). Disable with
   `compiler({ diagnostics: false })`. A separate type-aware check, `npx motif-lint`,
   reports `MJX005`: a ternary on a component prop whose declared type is not `Bind<T>` (the compiler
   cannot see prop types; TypeScript does not see the getter wrapping). A hit is a real contract
@@ -143,11 +144,24 @@
   the call site. Every other expression form passes by value.
 - A valueless attribute on a component tag (`<Comp flag />`) passes `flag: true`. Member-expression
   tags (`<Foo.Bar/>`) compile like any other component tag.
-- **Do not shadow `ComponentBase` members.** `dispose()`, `controls`, `props`, `motif`
-  names on the instance collide with the base class; TypeScript reports
-  "not assignable to the same property in base type". The framework operations `show`, `hide`,
-  `toggle`, `on`, `off`, `trigger`, `addHandler`, `clear`, `register`, `setDisposable`,
-  `stopAnimations` and `options` live on `this.motif`, so a subclass may use those names for its own members.
+- **Do not shadow `ComponentBase` members.** Reserved on a class component: `build`, `dispose`,
+  `disposeAsync`, `style`, `setText`, `setState`, `reState`, `using`, `doWork`, `getService`,
+  `useModel`, `$`, `context`, `siblings`, `serviceProvider`, `isWait`, `element`, `props`,
+  `controls`, `class`, `attr`, `bindings`, `motif`, `parent`, `childs` and the `is…` state flags
+  (`isBuilt`, `isVisible` …). `view()`, the lifecycle hooks, `initializeComponent` and
+  `onElementCreating` are meant to be written; an override of `build`/`dispose`/`style` … calls
+  `super.<name>(...)`. TypeScript reports only clearly incompatible types (`style = 'red'`); it
+  misses `any` fields, compatible-signature methods (`build() {}` leaves the component empty, a
+  page's `dispose()` without `super` is never torn down on navigation, a parameterless `style()`
+  drops the tag's `style`) and boolean flags. The compiler warns `MJX015` at build time for an
+  override that skips `super` on any path (`if (x) return;`, one-branch `if`, loop, `catch`,
+  callback), in `.ts`/`.js` files too; only `if (this.isBuilt|isDisposed|isWait) return;` in
+  `build` and `if (this.isDisposed) return;` in `dispose` are exempt. In development mode `MJX128` reports, once per class,
+  an override without `super`, an instance field hiding a method/accessor, and a replaced
+  `controls`/`attr`/`class`/`bindings`/`motif`/`element`/`parent`; `props` and the flags are not
+  checked. The framework operations `show`, `hide`, `toggle`, `on`, `off`, `trigger`, `addHandler`,
+  `clear`, `register`, `setDisposable`, `stopAnimations` and `options` live on `this.motif`, so a
+  subclass may use those names for its own members.
 - **Reach for `x-wait`/`x-display` before `{cond && <X/>}`.** The directive keeps the instance and
   swaps a `<!--h-->` placeholder, and when the condition starts hidden the element is never built at
   all (subtree included, lifecycle hooks silent). `{cond && <X/>}` constructs a new instance on every

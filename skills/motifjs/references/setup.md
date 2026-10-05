@@ -47,7 +47,7 @@ single file must compile with another JSX runtime).
 
 ```ts
 compiler({
-  diagnostics: false,        // silence the MJX001–MJX004 and MJX007 compile-time warnings (default: on)
+  diagnostics: false,        // silence the MJX001–MJX004, MJX007 and MJX015 compile-time warnings (default: on)
   explain: 'pages/Home',     // print "what did this expression compile to" for matching files
 })                           //   true = every file; string = path includes; RegExp = test(id)
 ```
@@ -75,7 +75,9 @@ TypeScript program from `tsconfig.json` and reports `MJX005`: a ternary written 
 whose DECLARED type does not accept a function. The compiler always wraps an attribute ternary in
 `() => …` (by design, for reactivity), so `<Icon name={ok ? 'a' : 'b'}/>` hands `Icon` a function
 while TypeScript sees `IconName`. Silent on DOM tags, `Bind<T>`/`any`/`unknown`/function-typed props,
-`key`/`x-*`/`on:*` names and generic `value: T` props. Exit code 1 on findings.
+`key`/`x-*`/`on:*` names and generic `value: T` props. It also reports `MJX015` (a class component
+override that does not reach `super` on every path) with the base class resolved by the type checker,
+in every file of the program. Exit code 1 on findings.
 
 ```sh
 npx motif-lint                            # ./tsconfig.json

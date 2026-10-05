@@ -187,6 +187,7 @@ to `errorHandler.addListener` (original error in `cause`); "dev warning" prints 
 | `MJX110` / `MJX111` | `Lazy` load error | `timeoutMs` elapsed / `signal` aborted; passed to `onError` (after a timeout `Fallbackview` is shown) |
 | `MJX126` | reported | a `Lazy` load failed with no `Fallbackview`; the host was cleared, original error in `cause` |
 | `MJX127` | thrown | a lazy route or `Lazy` loaded a module with no `default` export (or another non-component object; null/text/arrays/promises are placed as before); router: `cause` of `MJX304` + error route; `Lazy`: load failure. Fix: `export default`, or `() => import('./X').then(m => m.X)` |
+| `MJX128` | dev warning | a class component hides a `ComponentBase` member: override without `super` (`build`, `dispose`, `style` …), an instance field over a method/accessor, or a replaced `controls`/`attr`/`class`/`bindings`/`motif`/`element`/`parent`; once per class, behavior unchanged |
 | `MJX121` | dev warning | compiled code's compiler contract differs from the `@motifx/core` runtime |
 | `MJX122` | reported | a component hook, `ref` callback or `x:` lifecycle listener threw (`The component onBuilt hook threw.`) |
 | `MJX123` | reported | an event handler or application event listener threw (`The 'click' event handler threw.`) |
@@ -221,7 +222,9 @@ to `errorHandler.addListener` (original error in `cause`); "dev warning" prints 
 Compiler (`@motifx/compiler`): warnings `MJX001` (block-bodied arrow in child position declares locals the
 branches cannot see), `MJX002` (camelCase DOM event name on a component tag), `MJX003` (`.map()` item without
 `key`), `MJX004` (`some`/`every`/`find`… inside a reactive getter), `MJX007` (unknown `x-*` directive, passed on
-as `on<name>`); `MJX005` from `motif-lint` (ternary on a prop not typed `Bind<T>`); build errors `MJX006`
+as `on<name>`), `MJX015` (a class component override of a `ComponentBase` method/accessor that does not reach
+`super` on every path; also checked in `.ts`/`.js` files, base followed across files); `MJX005` from `motif-lint`
+(ternary on a prop not typed `Bind<T>`), which also reports `MJX015`; build errors `MJX006`
 (unsupported directive), `MJX008` (`function () {}` as a JSX child), `MJX009` (string/boolean event handler),
 `MJX010` (invalid lifecycle hook value), `MJX011` / `MJX012` (invalid directive value / object literal),
 `MJX013` (unsupported JSX tag name or child); `MJX014` (`motif-lint` cannot read the tsconfig).
