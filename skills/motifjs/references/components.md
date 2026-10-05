@@ -122,6 +122,9 @@ export function Todo(props: { text: string; done?: boolean }) {
 `el` and `ctor` is copied onto a component whose root is `el`. `this` inside `view()` is the component.
 `ctor(props)` runs once right after creation (before `build()`), with `this` = the component; a throw
 is reported as `MJX122` and the component is still created.
+A function returning such an object works wherever a component goes: a JSX tag, a route `control`,
+a `Lazy` `default`, and `new Component(Factory, props)`. A route calls it as `fn(app)` and its `ctor`
+receives `undefined`.
 
 ## Members you will use
 
