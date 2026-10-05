@@ -19,21 +19,34 @@ Packages: `@motifx/core` (runtime: components, reactivity, bindings, router, DI,
 virtualization) and `@motifx/compiler` (JSX compiler exposed as a Vite plugin — also usable in a plain
 Rollup build — plus the `motif-lint` and `motif-explain` CLIs).
 
-## Mental model: what to unlearn
+## Thinking in Motif (read before designing a feature)
 
-| React/Vue habit | MotifJS reality |
+Code that uses every API below correctly can still be structured like a re-rendering framework.
+The structure below is the default; `references/thinking-in-motif.md` explains each point and shows
+one page written both ways.
+
+1. **A component is a long-lived object** that owns real DOM nodes, in all three forms (class, function, Options API). `view()` hands it a template once; from then on reactivity and `controls` manage it. There is no re-render to design around.
+2. **Model and view are separate files.** Domain services hold reactive state and operations and are registered in DI (`singleton`). A page whose own state outgrows a handful of fields, or that coordinates several services, gets a page model (`scoped`: one instance per navigation, shared by the page and its children). The view binds and calls; it carries no fetch, try/catch or business rule. Write the model first, then the view.
+3. **Communication is chosen by scope.** Props carry what belongs to the parent/child relation: which item, which variant, which slot. App-wide concerns (session, API, settings, the page model) are resolved from DI by the component that needs them, never passed down as props. Operations are called on the model; a callback prop reports a choice from a small reusable part, it does not route business operations to the page. Components expose public methods only when published as a library; inside an app, state drives them.
+4. **Identity drives the data model.** One reactive object per entity for the life of the screen: fill it in place when data arrives, `push`/`splice` lists. Replacing an object or array is a deliberate "rebuild everything bound to it".
+5. **Rebuild or fill in place is a design decision per page.** The same thing changing state (data arriving, a page number, a sign-in) is filled in place behind `x-display`/`x-wait`; a different thing, or a tree whose shape depends on the data or on route params, is rebuilt. Both are correct in their place.
+6. **Boundaries follow state, reuse and rows,** not size. Split out a part when it has its own state and lifetime, when it is reused, or when it is a list row; never down to a `<div>`. Three or three thousand lines are both fine. Pages and model-bound views are classes, small parts are functions, the Options API carries object-based code.
+7. **`controls.add` inserts content that has no state to bind to.** Everything bound to a model is written in JSX.
+8. **Lifetime is yours.** Resources you open are registered with `this.motif.setDisposable`; work that finishes after an `await` goes through `this.using` / `this.doWork` or a scoped model, not a hand-written `isDisposed` check after every `await`.
+
+## Habits to unlearn
+
+| Habit | MotifJS |
 |---|---|
-| `useState`, hooks, re-render on state change | `state = reactive({...})`; mutate fields directly (`this.state.count++`). Nothing re-renders; the bound DOM node updates. |
-| `render()` runs many times | `view()` runs **once** when the component is built. Anything computed inside `view()` outside a `{() => ...}` getter is frozen. |
-| `className`, `onClick`, `htmlFor` | Lowercase DOM names: `class`, `onclick`, `oninput`, `for`. `className` is also accepted. |
-| `{cond ? <A/> : <B/>}` re-evaluated on render | Same syntax, but compiled to `bindings.ternary`; the branch is rebuilt when the value of `cond` changes (`Object.is`) and keeps its instance while it stays the same. |
-| `items.map(...)` re-runs on render | Same syntax, compiled to `bindings.list`; rows are matched by the item object, not by `key`. Give a stable `key` anyway (it identifies items and is checked for duplicates). Mutate the reactive array (`push`, `splice`, assign) and the DOM patches. |
-| `useEffect` + cleanup | `this.bindings.watch(() => ...)` inside a component (auto-disposed), or `effect(fn)` (returns a stop function you must register). |
-| `ref={el => ...}` gives a DOM node | `ref={(s) => ...}` / `ref={this.x}` (same as `x-ref`) give the **component instance** on every tag, exactly once; the DOM node is `s.element`. `ref` is never in `props`, so it is not forwarded by `{...props}`; expose inner elements through a separately named prop (`inputRef`). |
-| Context / Redux / Pinia | Built-in DI (`builder.services.addSingleton(...)`, `this.getService(T)`) and module-level `reactive()` stores. |
-| `<Link>` / `useNavigate` | `<a rel="router" href="/x">`, `<RouterLink to="/x" el="a">`, `this.context.navigate('/x')`. |
-| `react-router` `<Outlet>` | `<RouterView />` inside a layout; child routes render there. A layout that renders no `<RouterView />` leaves its child routes unmounted (development mode warns `MJX301`). |
-| Component unmount is free | Everything created via JSX is disposed automatically, and so are `this.context.on(...)` / `this.context.onRouterChanged(...)` subscriptions. External resources (timers, sockets, `effect`, the unsubscribe function of `this.context.onLifecycle(...)`) must be registered with `this.motif.setDisposable(fn)`. |
+| `useState`, hooks, re-render on change | `state = reactive({...})`; mutate fields (`this.state.count++`); the bound DOM node updates, nothing re-renders. |
+| `render()` runs many times | `view()` runs **once**; a value computed outside a `{() => ...}` getter is frozen. |
+| `className`, `onClick`, `htmlFor` | DOM names: `class`, `onclick`, `oninput`, `for`. |
+| `{cond ? <A/> : <B/>}` and `items.map(...)` re-evaluated per render | Compiled to `bindings.ternary` / `bindings.list`: a branch is rebuilt when the value changes, rows follow the item object. Give a stable `key` anyway. |
+| `useEffect` + cleanup | `this.bindings.watch(fn)` (auto-disposed) or `effect(fn)`, whose stop function you register. |
+| `ref` gives a DOM node | `ref` / `x-ref` give the component instance, exactly once; the node is `s.element`. `ref` is never in `props`. |
+| Context / Redux / Pinia | Built-in DI (`builder.services.addSingleton(...)`, `this.getService(T)`, `inject(T)`) with reactive service state. |
+| `<Link>`, `useNavigate`, `<Outlet>` | `<a rel="router" href="/x">`, `<RouterLink to="/x" el="a">`, `this.context.navigate('/x')`, `<RouterView />` inside the layout. |
+| Unmount is free | JSX-created children and `this.context.on(...)` subscriptions are disposed for you; timers, sockets and `effect` stops go through `this.motif.setDisposable(fn)`. |
 
 ## Minimal correct project
 
@@ -118,6 +131,7 @@ export const MessageBox = () => ({
 
 | Need | File |
 |---|---|
+| Design: component as object, model/view split, communication by scope, identity, rebuild vs fill, one page written both ways | `references/thinking-in-motif.md` |
 | Build setup, file extensions, opt-out markers, tsconfig | `references/setup.md` |
 | Component anatomy: constructor forms, props/childs, controls, refs, context, elementTag | `references/components.md` |
 | JSX expression forms, attributes, `x-*` props, reactive primitives, bindings API | `references/jsx-and-reactivity.md` |

@@ -3,7 +3,7 @@
 Every component derives from `ComponentBase<TElement, TProps>`; you use the concrete `Component`.
 A component = one root DOM node (`element`) + a live child collection (`controls`) + bindings.
 
-## Class component (preferred for anything non-trivial)
+## Class component (pages and views bound to a model)
 
 ```tsx
 import { Component, ComponentBase, EventArgs, reactive } from '@motifx/core';
