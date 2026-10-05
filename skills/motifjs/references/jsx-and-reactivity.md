@@ -234,6 +234,9 @@ method, the value is written as a plain attribute.
 | `options={{ hideStrategy, disableDisposal }}` | Copied into the tag's `motif.options` (plain DOM tags and component tags); no attribute is written. |
 | `initializeComponent={(s) => ...}` | Called once with the tag's component as `sender`, during build right before `view()`; good place for `s.bindings.*` calls. Same meaning and timing on plain DOM tags, class component tags and function component tags (the returned root). The compiler emits its own `initializeComponent` for the tag's attributes, events, directives and children (inside `runover` on component tags); both run: the component's method, then the tag's, then the compiled one. With JSX you rarely write it; it is mainly for building components without JSX. |
 
+On every directive (including `x-wait`/`x-display`) a variable or member holding a function is called as the
+getter, with `this` for a method: `x-display={isAuthor}`, `x-wait={this.isLoading}`, `x-text={this.label}`.
+
 ## The bindings API (`this.bindings` / `sender.bindings`)
 
 The compiler generates these; you can call them directly in `initializeComponent`/`onconfig` or in tests.
