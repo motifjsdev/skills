@@ -30,7 +30,8 @@ app.onLifecycle(({ state, visible, online }) => …) → unsubscribe fn   // sta
 app.isVisible; app.isOnline
 app.useDevelopment(bool = true); app.useLogging(bool = true); app.useReactiveMonitor({ enabled, threshold, name })
 app.isDevelopmentModeEnabled; app.restartRouter() (builds a fresh router from the latest useRouter config and restarts at the current address/shown page: routes, keepAlive cache, stack and scroll memory reset; page rebuilt; onRouterChanged fires with initial: true; no-op before run)
-app.provider: ServiceProvider; app.getAppShell(): Component; app.dispose(): Promise<void>   // sync: router, lifecycle listeners, provider, address '/' (replaceState); resolves after pages, RouterView and the run() shell are disposed; the host element stays
+app.provider: ServiceProvider; app.getAppShell(): Component; app.dispose(): Promise<void>   // sync: state 'disposing', router, lifecycle listeners, address '/' (replaceState); then pages (leave animations), RouterView, run() shell, LAST the provider (async disposes awaited) and Application.main = null; components keep seeing services/context until then; a second call returns the same promise; the host element stays
+app.state: 'initializing' | 'running' | 'disposing' | 'disposed'   // a new CreateBuilder() is allowed while the previous app is 'disposing'; its torn-down pages still resolve their own app
 app.insert(c) / app.attach(c)  // add to the app shell; app.remove(c) (dispose) / app.detach(c) (no dispose); app.appendToMainHost(node)
 useNavigation(): Router   // the same object as app.router; read nav.params.id live, destructuring keeps that moment's value
 useApplication(): { application, services, router, attach(...components) }   // application = Application.main
@@ -210,7 +211,7 @@ to `errorHandler.addListener` (original error in `cause`); "dev warning" prints 
 | `MJX310`–`MJX316` | dev warning | route linter: empty path, child path/alias without `/`, child equals parent path, duplicate full path, alias equals own path, duplicate alias |
 | `MJX401` | thrown | token not registered (and not `@Injectable`) |
 | `MJX404` | thrown | cyclic service dependency |
-| `MJX405` | thrown | second `Application.CreateBuilder()` before `app.dispose()` |
+| `MJX405` | thrown | second `Application.CreateBuilder()` while an app is running (allowed once the previous app is `'disposing'`) |
 | `MJX406` | thrown | `app.run(selector)` found no host |
 | `MJX409` | thrown | `inject()` outside a provider construction |
 | `MJX413` | thrown | `add*(token, fn)` with a non-constructible function |

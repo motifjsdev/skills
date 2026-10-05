@@ -122,7 +122,7 @@ there too. An explicit `add*`/`tryAdd*` registration always wins over the decora
 | `MJX401` | `get` / `getAsync` / `inject()` (or a dependency of the service) asks for a token that is neither registered nor `@Injectable`: `Service not registered for token: X` |
 | `MJX402` | `get` on a Promise / async factory; use `getAsync` |
 | `MJX404` | a dependency cycle: `Cyclic dependency detected: A[useClass] -> B[useClass] -> A[useClass]` |
-| `MJX405` | a second `Application.CreateBuilder()` before `app.dispose()`: `Only one ApplicationBuilder instance is allowed.` |
+| `MJX405` | a second `Application.CreateBuilder()` while an app is running (allowed once the previous app is `'disposing'`): `Only one ApplicationBuilder instance is allowed.` |
 | `MJX406` | `app.run('#sel')` with a selector that matches nothing |
 | `MJX407` / `MJX408` | dev warnings from `this.getService` (no provider / resolution failed); it returns `null` |
 | `MJX409` | `inject()` outside a provider construction |

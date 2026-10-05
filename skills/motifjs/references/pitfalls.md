@@ -187,8 +187,10 @@
 - A component callback prop whose name matches a **known DOM event** (`onChange`, `onInput`, `onSelect`,
   `onToggle`, `onResize`…) is consumed as that DOM listener and does **not** reach `this.props`. Name callbacks after
   domain events instead: `onValueChange`, `onAdd`, `onDismiss`.
-- `Application.CreateBuilder()` may be called once per page; a second call before `app.dispose()` throws
-  `MJX405`. Call `rebuild()` for hot-reload scenarios.
+- `Application.CreateBuilder()` may be called once per page; a second call while an app is running throws
+  `MJX405` (it is allowed once `app.dispose()` has been called, even without `await`). Call `rebuild()` for
+  hot-reload scenarios. `app.dispose()` disposes the services last, after the tree and its leave animations,
+  so every `onDisposing` / `onDisposed` and code running during an animation still sees services and `context`.
 - `this.context.on(...)` returns an unsubscribe function and is removed automatically when the component
   is disposed (so is `this.context.onRouterChanged`). `this.context.onLifecycle(...)`,
   `Application.main.on(...)` and a captured `app.on(...)` are not: keep and call (or

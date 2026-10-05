@@ -334,8 +334,8 @@ effect through `restartRouter()`), otherwise the current config. It restarts at 
 `keepAlive` cache and stack-kept pages are disposed, the page is rebuilt, no history entry is added, and
 `onRouterChanged` fires with `initial: true`, `direction: 'initial'`. Before `run()` it does nothing.
 `app.dispose()` also disposes the router and resets the address to `/` with `history.replaceState` only
-(no hash write, no new history entry). `await app.dispose()` resolves once the pages, the `RouterView` and
-the `run()` shell are disposed; the host element stays in the page and can host a new `run()`.
+(no hash write, no new history entry). `await app.dispose()` resolves once the pages, the `RouterView`,
+the `run()` shell and then the services are disposed; the host element stays in the page and can host a new `run()`.
 
 ## Page stack — `stack`
 
