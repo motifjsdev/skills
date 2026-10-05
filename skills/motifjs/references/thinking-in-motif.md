@@ -95,7 +95,8 @@ is therefore designed around identity from the start:
   (`[...items, x]`) is a new array and rebuilds every row.
 - Replacing an object or an array is allowed and sometimes right: it means "everything bound to this is
   rebuilt". It is a decision, not the default way to update.
-- A reactive object holds plain data. Functions and `RegExp` instances stay outside it.
+- A reactive object holds data. Callbacks stay outside it: a template slot calls a function value with
+  no arguments.
 
 ## 5. Rebuild or fill in place
 
