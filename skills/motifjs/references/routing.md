@@ -39,10 +39,13 @@ path and query params); returning `false` makes the route not match (another rou
 
 Hook order: the current route's `onLeave` → app guards (`useGuard`) → `onUpdate` (same route, params
 changed only) → `onEntering` (page not created, not in the DOM yet) → page built and mounted →
-`onShow` → `onEnter` → `onRouterChanged`. Data prefetch in `onEntering` covers both a new route and a
-param change. `onLeave` also runs on a param change of the same route. `onLeave` cancels the
-navigation by returning `false` (`reason: 'onLeave'`) or `{ cancel: true, reason? }` (`reason` defaults
-to `'onLeave'`); any other result lets it continue.
+`onShow` → `onEnter` → `onRouterChanged`. A parameter change on the same route rebuilds the
+page (that is the router's job); `keepAlive: true` keeps the instance and only the hooks run. Do not route UI
+state such as list filters unless rebuilding the page on each change is what you want.
+Data prefetch in `onEntering` covers both a new route and a param change. `onLeave` also runs on a
+param change of the same route. `onLeave` cancels the navigation by returning `false`
+(`reason: 'onLeave'`) or `{ cancel: true, reason? }` (`reason` defaults to `'onLeave'`); any other result
+lets it continue.
 
 Errors: a throwing (or rejecting) `onLeave` / `onEntering` / `onUpdate` / `onEnter`, and a throwing
 (or rejecting) `onShow`, is reported as `MotifError` `MJX306` and the navigation continues. A route control that
