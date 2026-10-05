@@ -21,6 +21,10 @@
   `errorHandler.addListener(fn)`. Other listeners of the event still run.
 - Handler arity decides the signature: 1 param → `(event)`, 2 params → `(sender, event)` where
   `sender` is the `ComponentBase` (`sender.element`, `sender.context`, `sender.props`).
+- Under `strict` both forms are typed from the element's event on plain and component tags
+  (`onkeydown={(e) => e.key}` → `KeyboardEvent`); no annotation is needed. The first parameter is typed
+  `Event & ComponentBase` because its meaning depends on arity: use event members in `(e) => …`,
+  component members in `(s, e) => …`.
 - Returning `{ cancel: true }` → `preventDefault()` + `stopPropagation()`. Every other return value,
   `false` included, is ignored: `onkeydown={(e) => e.key === 'Enter' && submit()}` leaves other keys
   alone. To cancel use `:prevent` / `:stop`, `e.preventDefault()` or `{ cancel: true }`. These (and the
