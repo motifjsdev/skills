@@ -30,7 +30,7 @@ app.onLifecycle(({ state, visible, online }) => …) → unsubscribe fn   // sta
 app.isVisible; app.isOnline
 app.useDevelopment(bool = true); app.useLogging(bool = true); app.useReactiveMonitor({ enabled, threshold, name })
 app.isDevelopmentModeEnabled; app.restartRouter() (builds a fresh router from the latest useRouter config and restarts at the current address/shown page: routes, keepAlive cache, stack and scroll memory reset; page rebuilt; onRouterChanged fires with initial: true; no-op before run)
-app.provider: ServiceProvider; app.getAppShell(): Component; app.dispose()   // disposes router, lifecycle listeners and provider; resets the address to '/' with history.replaceState
+app.provider: ServiceProvider; app.getAppShell(): Component; app.dispose(): Promise<void>   // sync: router, lifecycle listeners, provider, address '/' (replaceState); resolves after pages, RouterView and the run() shell are disposed; the host element stays
 app.insert(c) / app.attach(c)  // add to the app shell; app.remove(c) (dispose) / app.detach(c) (no dispose); app.appendToMainHost(node)
 useNavigation(): Router   // the same object as app.router; read nav.params.id live, destructuring keeps that moment's value
 useApplication(): { application, services, router, attach(...components) }   // application = Application.main
@@ -186,7 +186,7 @@ to `errorHandler.addListener` (original error in `cause`); "dev warning" prints 
 | `MJX108` | value | `doWork(p)` resolves to this `MotifError` (does not reject) when the component was disposed meanwhile |
 | `MJX110` / `MJX111` | `Lazy` load error | `timeoutMs` elapsed / `signal` aborted; passed to `onError` (after a timeout `Fallbackview` is shown) |
 | `MJX126` | reported | a `Lazy` load failed with no `Fallbackview`; the host was cleared, original error in `cause` |
-| `MJX127` | thrown | a lazy route or `Lazy` loaded a module with no `default` export (or a non-component); router: `cause` of `MJX304` + error route; `Lazy`: load failure. Fix: `export default`, or `() => import('./X').then(m => m.X)` |
+| `MJX127` | thrown | a lazy route or `Lazy` loaded a module with no `default` export (or another non-component object; null/text/arrays/promises are placed as before); router: `cause` of `MJX304` + error route; `Lazy`: load failure. Fix: `export default`, or `() => import('./X').then(m => m.X)` |
 | `MJX121` | dev warning | compiled code's compiler contract differs from the `@motifx/core` runtime |
 | `MJX122` | reported | a component hook, `ref` callback or `x:` lifecycle listener threw (`The component onBuilt hook threw.`) |
 | `MJX123` | reported | an event handler or application event listener threw (`The 'click' event handler threw.`) |

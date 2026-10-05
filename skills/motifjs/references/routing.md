@@ -30,7 +30,7 @@ factory `() => ({ el, view })`, `() => import(...)`, or a Promise; required unle
 requires `control` or `redirect` (a route with neither is a TS error). `meta` and `extend` are merged
 along the matched chain (a layout's `meta.requiresAuth` is seen by its children).
 A lazily imported page must be the module's `export default`; for a named export map it:
-`() => import('../pages/Home').then(m => m.HomePage)`. A module without `default` (or a non-component)
+`() => import('../pages/Home').then(m => m.HomePage)`. A module without `default` (or another non-component object)
 throws `MJX127`, reported as the `cause` of `MJX304`, and `fallbacks.error` is shown.
 `extend.targetOutlet: 'name'` mounts the route into the named `<RouterView name="name">` instead of
 `default`. `validate(e)` runs for every route of a candidate chain (layouts included) and receives
@@ -331,7 +331,8 @@ effect through `restartRouter()`), otherwise the current config. It restarts at 
 `keepAlive` cache and stack-kept pages are disposed, the page is rebuilt, no history entry is added, and
 `onRouterChanged` fires with `initial: true`, `direction: 'initial'`. Before `run()` it does nothing.
 `app.dispose()` also disposes the router and resets the address to `/` with `history.replaceState` only
-(no hash write, no new history entry).
+(no hash write, no new history entry). `await app.dispose()` resolves once the pages, the `RouterView` and
+the `run()` shell are disposed; the host element stays in the page and can host a new `run()`.
 
 ## Page stack — `stack`
 
