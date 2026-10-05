@@ -171,7 +171,9 @@ fall through to the component's root element (attribute fallthrough): `class`/`c
 with the component's own classes), `style`, `id`, `tabindex`, `role`, `aria-*`, `data-*`. Getters
 stay live. Data/callback props (`items`, `label`, `onSave`, `disabled`) are never written to the root, and
 neither is `title` — deliberately, since it is a very common data prop name (`<Card title="…"/>`).
-Everything, including the fallen-through keys, remains readable in `this.props`. The component's own
+Everything, including the fallen-through keys, remains readable in `this.props`. The types accept these
+keys and DOM event props on every component tag (even with a custom constructor props type); a prop the
+component declares under the same name keeps its own type. The component's own
 `onConfigured`/`initializeComponent` attributes win for the same attribute (fallthrough is applied in the constructor).
 Function components behave the same: the tag's common attributes land on the returned root (no double
 application when the root is `<div {...props}/>`). A fragment-rooted component silently ignores them.
