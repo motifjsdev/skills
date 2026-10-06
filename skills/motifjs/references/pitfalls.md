@@ -18,7 +18,6 @@
 | Cleanup in `componentWillUnmount` only | `this.motif.setDisposable(fn)` in the same place you create the resource | resources registered anywhere are disposed |
 | `await nextTick(); expect(dom)` after `controls.add` | not needed; insertion is synchronous | but reactive *updates* flush on a microtask |
 | `<Outlet/>`, `<Link to>` | `<RouterView/>`, `<a rel="router">` / `<RouterLink to el="a">` | |
-| Forgetting `esbuild: { jsx: 'preserve' }` | add it | esbuild would compile JSX first and break bindings |
 | Forwarding `class`/`id`/`aria-*` from `this.props` to the root by hand | nothing — `<Card class="x" id="y"/>` falls through to the root automatically | only common attributes fall through (class/style/id/tabindex/role/aria-*/data-*); `title`, `disabled` and data props stay in `this.props`; `<div {...props}/>` on a DOM tag applies every key |
 
 ## Compiler quirks

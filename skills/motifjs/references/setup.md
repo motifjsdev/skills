@@ -30,7 +30,6 @@ import compiler from '@motifx/compiler';
 
 export default defineConfig({
   plugins: [compiler()],   // enforce: 'pre'; transforms .jsx .tsx .aio .mjsx .mtsx (node_modules included); lowers decorators in .ts .mts .cts .js .mjs .cjs (not in node_modules, .d.ts, or under a tsconfig with experimentalDecorators); skips ?raw/?url/?worker/?sharedworker/?inline and virtual modules
-  esbuild: { jsx: 'preserve' },       // esbuild must NOT touch JSX
   resolve: { extensions: ['.tsx', '.ts', '.jsx', '.js'] },
   server: { port: 3000 },
 });

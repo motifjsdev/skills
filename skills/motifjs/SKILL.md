@@ -56,7 +56,6 @@ import { defineConfig } from 'vite';
 import compiler from '@motifx/compiler';
 export default defineConfig({
   plugins: [compiler()],
-  esbuild: { jsx: 'preserve' },          // REQUIRED: the compiler compiles JSX, not esbuild
   resolve: { extensions: ['.tsx', '.ts', '.jsx', '.js'] },
 });
 ```
