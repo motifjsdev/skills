@@ -178,7 +178,9 @@ class Form extends Component<HTMLFormElement> {
 
 `ref` receives the tag's **component** (on a plain DOM tag, the `Component` wrapping the element); use
 `.element` for the node. It is called while the component is constructed (before `build()`) and is never
-written to the DOM. Two forms:
+written to the DOM. `props`, the common attributes and `options` are already applied when it runs; on a class
+component the subclass's own fields are not yet initialized (JavaScript sets them after the base constructor
+returns), so use a ref to store the component (`ref={(b) => (this.okButton = b)}`), not to write its fields. Two forms:
 
 - `ref={(c) => …}` (callback) and `ref={this.x}` (called if the target is a function, assigned otherwise) work on plain DOM tags and component
   tags alike; on a function component tag the returned root is passed.
