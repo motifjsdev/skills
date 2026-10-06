@@ -68,8 +68,11 @@ the flag a new instance is built on every visit. Cached instances are released b
 `app.router.evict('routeName')` / `app.router.evict(routeItem)` / `app.router.evict()` (all; the instance
 currently on screen is skipped) or `app.dispose()`. An unknown route name rejects with `MJX302`.
 
-Query the route table without navigating: `app.router.resolve(uri)` (match result: `ok`, `uri`, `fullPath`,
-`route`, `chain`, `params`, `meta`, `extend`, `aliasOf`), `app.router.href(name, params?)` (path of a named
+Query the route table without navigating: `app.router.resolve(uri)` returns `{ chain, result }`: `chain` is
+`string[]` like `app.router.chain` (each route's own path, params filled: `['/admin', '/logs/today']`) and
+`result` is the `ResolveResult` `navigate` returns for that address (`ok`, `uri`, `fullPath`, `route`,
+`chain: RouteItem[]` root to leaf, `params`, `meta`, `extend`, `aliasOf`; guards/middleware/redirects do not
+run), `app.router.href(name, params?)` (path of a named
 route, e.g. for `<RouterLink to>`; unknown name throws `MJX302`; `0` and `false` values are written,
 `undefined` / `null` / `''` fall back to the pattern default, and a param with no value and no default
 drops its segment), and `app.router.routes` (every route in definition order, aliases excluded, as
@@ -266,8 +269,8 @@ that navigation is skipped); the page is not rebuilt. `scroll`: `'top' | 'smooth
 `app.navigate` resolves to a result: the shown route's `ResolveResult` (`ok: false` for not-found and
 error pages), `{ ok: true, skipped: true, uri }` when skipped, `{ ok: false, cancelled: true, reason }`
 when a guard or `onLeave` cancels (`reason`: `'guard'`, `'onLeave'` or the `onLeave` reason), and
-`{ ok: false, uri, cancelled: true, reason: 'middleware' }` when a middleware stops it. `app.router.navigate`
-resolves to `undefined`.
+`{ ok: false, uri, cancelled: true, reason: 'middleware' }` when a middleware stops it. `app.router.navigate` and
+`app.router.navigateByName` resolve to the same result.
 
 `app.router` is one object for the whole application; `useNavigation()` and `useApplication().router`
 return it. Its route fields (`params`, `route`, `uri`, `ok`, `meta`, `extend`, `fullPath`, `aliasOf`,

@@ -14,14 +14,14 @@ app.useGuard((ctx: { to, from }, next: (to?: string | false) => void) => void): 
 app.use((ctx: RouteResolveContext, next) => any): Application        // ctx: { uri, context, rewritePath(uri) }
 app.navigate(uri, options?: NavigationOptions): Promise<any>         // options are forwarded to the router; resolves to the navigation result, e.g. { ok: false, cancelled: true, reason: 'guard' }
 app.navigateByName(name, params?, options?: NavigationOptions): Promise<any>
-app.router.navigate(uri, options?: NavigationOptions): Promise<void>  // { replace?, state?, force?, scroll? }
+app.router.navigate(uri, options?: NavigationOptions): Promise<any>  // { replace?, state?, force?, scroll? }
 app.router.params / .route / .uri / .ok / .meta / .extend / .chain   // one object per app; read-only, reactive
 app.router.direction   // 'initial' | 'push' | 'replace' | 'back' | 'forward' | 'traverse'
 app.router.state       // the `state` given to navigate() for the current history entry; comes back on back/forward and reload
 app.router.stack       // only with useRouter({ stack }): [{ index, uri, current, retained }]
 app.router.fullPath / app.router.aliasOf             // matched pattern / canonical pattern when matched via alias (else null)
 app.router.evict(nameOrRoute?): Promise<void>      // release cached keepAlive instances (no argument → all); unknown name rejects with MJX302
-app.router.resolve(uri): ResolveResult                // match without navigating: { ok, uri, fullPath, route, chain, params, meta, extend, aliasOf }
+app.router.resolve(uri): RouteResolution              // match without navigating: { chain: string[] (like router.chain), result: ResolveResult (what navigate returns; result.chain: RouteItem[]) }
 app.router.href(name, params?): string               // path of a named route (throws MJX302 for an unknown name)
 app.router.routes: RouteInfo[]                        // route table in definition order: { fullPath, name, meta, route, chain }
 app.on(event, handler) → unsubscribe fn; app.off(event, handler); app.fire(event, args?)
