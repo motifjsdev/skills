@@ -68,6 +68,7 @@ scope is what produces three levels of `auth={this.auth}`.
 | Live data read and written by several components | the same reactive object, handed once | `article` shared by the banner, the bottom meta and every preview |
 | A notification between parts far apart in the tree | `this.context.fire` / `this.context.on` | `context.fire('article:deleted', slug)` |
 | A choice made inside a small reusable part | callback prop | `<TagInput onAdd={(tag) => model.addTag(tag)} />` |
+| Reaching another component (parent, child, sibling, a match anywhere below) | the component tree or a `ref` | `this.siblings.all()?.forEach(t => t.deselect())` |
 
 Two consequences follow:
 
@@ -78,9 +79,9 @@ Two consequences follow:
   that the page can call the service. A callback prop is for a part that is reused in many places and
   has no idea what its choice means.
 
-Public methods on a component belong to library components, where consumers need an outward
-contract. Inside an application a component exposes nothing; whoever needs it to change writes the
-state it is bound to. That is both less code and safer.
+A component is an object. Its public fields and methods are its contract; other components reach it
+through the tree (`this.parent`, `this.controls.items`, `this.siblings`, `this.$(selector).fromComponent()`)
+or a `ref`, and call it directly.
 
 ## 4. Identity drives the data model
 

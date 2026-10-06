@@ -209,7 +209,37 @@ functions included), not in function components, module-level JSX or `function` 
 - Child → parent: callback props. `onSave={(v) => ...}` stays in `this.props.onSave` (call it as
   `this.props.onSave?.(v)`). Pick names that are not DOM event names: `onChange`, `onInput`, `onSelect`,
   `onToggle`, `onResize`… on a component tag become root-element DOM listeners and never reach `this.props`
-  (compiler warning `MJX002`). Alternatively use `this.parent`.
+  (compiler warning `MJX002`), or call the parent through `this.parent`.
 - Anywhere ↔ anywhere: `this.context.on('evt', h)` / `this.context.fire('evt', payload)` (a subscription
   made through `this.context` is removed when the component is disposed), or a singleton service /
   module-level `reactive()` store.
+- Through the tree: `this.parent`, `this.controls.items`, `this.siblings`, `this.$(selector).fromComponent()`
+  and `ref` reach any component; its `element`, `props`, public fields and methods are used directly.
+
+## Navigating the component tree
+
+Components form a live object tree that can be walked in every direction:
+
+```tsx
+this.parent;                         // parent component; null at the root
+this.controls.items;                 // children
+this.siblings.next();                // next sibling (undefined at the end)
+this.siblings.prev();                // previous sibling (undefined at the start)
+this.siblings.all();                 // the parent's children, this one included
+this.siblings.nextAll();             // the siblings after this one
+this.siblings.prevAll();             // the siblings before this one
+this.$('.tab').fromComponent();      // matching components below: ComponentBase[]
+this.$('input').fromDom();           // matching DOM nodes inside the element: NodeList
+
+<button class="tab" onclick={(sender) => {
+  sender.siblings.all()?.forEach((t) => t.class.remove('active'));
+  sender.class.add('active');
+}}>A</button>
+```
+
+- `siblings` reads the parent's `controls.items`; without a parent every method returns `undefined`.
+- `fromComponent()` walks the component tree depth-first from this component (it is included when it
+  matches) and matches each component's element against the selector. A component whose root is a
+  fragment starts from the nearest ancestor that owns a real element. `fromDom()` runs
+  `querySelectorAll` inside that element; a disposed component returns `null` / `[]`.
+- A plain tag in JSX is a component too: `sender` in an event handler is that tag's component.
