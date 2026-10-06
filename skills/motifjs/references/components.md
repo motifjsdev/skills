@@ -82,8 +82,11 @@ this.controls.items; this.controls.length; this.controls.forEach(fn); this.contr
 - JSX children are delivered as `this.childs` (`ComponentBase[]`). A component that wants to
   render them must add them: `this.controls.add(...this.childs)` or `{this.childs}` in `view()`. When the
   constructor gets no element (fragment root, or a declared element from `Component<HTMLDivElement>` /
-  `static elementTag`), the children are appended to the root automatically, and placing them in `view()`
-  moves them there; with `super('div', props)` nothing is appended for you.
+  `static elementTag`), the children are appended to the root automatically, unless the class's JSX places
+  `{this.childs}` / `{() => this.childs}`: then they are built only in that slot, so a slot behind
+  `x-wait` / `x-display` or inside a nested element waits with it (the compiler marks such a class with
+  `static _placesChilds`). With `super('div', props)` nothing is appended for you. Children that are never
+  placed are disposed with the component that received them.
 
 ```tsx
 class Panel extends Component<HTMLDivElement, { title: string }> {
