@@ -169,7 +169,9 @@ Off by default. When enabled the router stores the scroll position of every visi
 back when you return there (back/forward, link click, page reload — the positions live in
 `sessionStorage`). A hash in the URL wins over the stored position; a path seen for the first time
 starts at the top; a per-navigation `scroll` option (`app.router.navigate('/x', { scroll: 'top' })`)
-overrides the memory.
+overrides the memory. Restoring, the top of a new page, an anchor reached from another page and
+back/forward scroll instantly even with CSS `scroll-behavior: smooth`; only an anchor link within the
+same page (router link, or a plain `<a href="#id">` in `history` mode) follows the CSS `scroll-behavior`.
 
 ```ts
 app.useRouter({
