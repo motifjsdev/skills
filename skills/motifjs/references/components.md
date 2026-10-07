@@ -45,6 +45,10 @@ export default class UserCard extends Component<HTMLDivElement, UserCardProps> {
 
 Use SVG by declaring `Component<SVGSVGElement>` (namespace injected) or passing `{ options: { isSvg: true } }`.
 
+To narrow `props` in a subclass of an existing component, write `declare props: DialogProps;` (type only, no
+code). Never `props: DialogProps;` or `props!: DialogProps;`: that creates a new field that overwrites the base
+class's `props` with `undefined`. `declare` and `abstract` fields compile to nothing.
+
 ### `view()` vs imperative `controls`
 
 - `view()` is called once during `build()`; its return value becomes the children.
