@@ -14,7 +14,7 @@
 | 7 | `onBuilt` | component + children built (element may still be inside a detached fragment) | wiring that does not need layout |
 | 8 | `onMounted` | element attached to `document` — once (immediately if already attached) | focus, measure, third-party widgets |
 | – | `onActivated` / `onDeactivated` | an already built component is removed from the DOM without disposal (`onDeactivated`) and put back (`onActivated`): `keepAlive` route return, `controls.detach`/`silentDetach` then `controls.add` (incl. moving to another parent), `motif.hide()`/`motif.show()` (incl. `x-wait`/`x-display`), Virtualization rows scrolled out/in. Not on first appearance. Propagates to the visible subtree, parent first; a hidden child is activated by its own `motif.show()` | refresh data, pause timers |
-| – | `onVisibilityChanged` | when `motif.show()/hide()/toggle()` (incl. `x-wait`/`x-display`) changes visibility; it runs before `isVisible` is updated (on hide after the leave animation), so inside it `isVisible` still holds the previous value | |
+| – | `onVisibilityChanged` | when `motif.show()/hide()/toggle()` (incl. `x-wait`/`x-display`) changes visibility; it runs before `isVisible` is updated (on hide after the leave animation), so inside it `isVisible` still holds the previous value and `e.visible` (`VisibilityChangedEventArgs`) the new one | |
 | – | `onDisposing` | teardown begins | manual cleanup |
 | – | `onDisposed` | teardown finished | |
 
