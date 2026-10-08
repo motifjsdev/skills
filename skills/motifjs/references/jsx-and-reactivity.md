@@ -262,6 +262,7 @@ model(getter, setter)                    // two-way through functions; what `x-m
 model(source, member, format?, formatInfo?) // two-way (checked/value/src chosen by element type)
 model(binding)                           // any single object argument is taken as an IBaseBinding;
                                          // a single function argument binds one-way (no write-back)
+writeModel(value)                        // write back through this component's model/x-model bindings; false if none
 wait(() => bool); display(() => bool)
 remove(binding); clear()                 // deactivate registered bindings
 activateAll(); deactivateAll()           // deactivateAll also empties the registry

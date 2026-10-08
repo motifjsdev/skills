@@ -141,6 +141,22 @@ one-way. For inputs the property choice is re-evaluated on every read/write, not
 when `onconfig` runs, the `type` attribute may not be applied yet.
 `bindings.add('checked', f, 'agree')` binds one-way to an explicit property.
 
+`x-model` on a component whose root is not a form element: the bound value is written to the
+component's `value` property (define `set value(v)`), and the component writes back with
+`this.bindings.writeModel(v)`. It writes through every `model`/`x-model` binding on the component
+(same path as form elements, `converterBack` applied) and returns `false` when there is none, so the
+component also works without `x-model`. Do not search `bindings.items` for the setter.
+
+```tsx
+class Toggle extends Component<HTMLDivElement> {
+  state = reactive({ on: false });
+  set value(v: boolean) { this.state.on = !!v; }
+  get value() { return this.state.on; }
+  view() { return <button onclick={() => this.bindings.writeModel(!this.state.on)}>toggle</button>; }
+}
+<Toggle x-model={() => settings.dark} />
+```
+
 `checked`, `selected`, `muted`, `indeterminate` and `srcObject` written as attributes are set as element
 properties (`!!value`; `srcObject` gets the value or `null`), not as HTML attributes:
 `<input type="checkbox" indeterminate={() => f.partial} />`.
