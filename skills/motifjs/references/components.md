@@ -150,7 +150,7 @@ receives `undefined`.
 | `motif` | Namespace (`ComponentMotif`) for the framework operations below. A subclass may define its own `show`, `on`, `clear`, `options`… without breaking `x-display`, transitions, list keys or dispose; the framework only calls `this.motif.*`. Members: `show`, `hide`, `toggle`, `on`, `off`, `trigger`, `addHandler`, `clear`, `register`, `setDisposable`, `stopAnimations`, `options`. |
 | `motif.on/off/trigger/addHandler` | Events (events-and-forms.md). |
 | `motif.show()/hide()/toggle()`, `isVisible`, `isWait` | Visibility (lifecycle-and-dispose.md). |
-| `motif.options.hideStrategy` | `'placeholder'`, `'detach'` or `'auto'` (default). Give it in JSX through the `options` prop (`options={{ hideStrategy: 'detach' }}`) or assign `this.motif.options.hideStrategy` in code. A bare `hideStrategy="detach"` attribute is not special. |
+| `motif.options.hideStrategy` | `'placeholder'`, `'detach'` or `'auto'` (default, behaves as `'placeholder'`). Give it in JSX through the `options` prop (`options={{ hideStrategy: 'detach' }}`) or assign `this.motif.options.hideStrategy` in code. A bare `hideStrategy="detach"` attribute is not special. |
 | `motif.options.display` | Getter returns `isVisible`; assigning `true`/`false` calls `motif.show()`/`motif.hide()`. |
 | `motif.options.hasEvent(name)` | `true` when a `motif.on(name, …)` listener is registered (names are stored lowercased). |
 | `motif.options.enableRouterClassing = { to, path, activeClass?, exactClass?, onActive?, offActive?, onExact?, offExact? }` | Setter; toggles the classes on the root on every route change (subscription auto-disposed). `to`: `'all'`, `'active'` (segment-prefix match, exact included), `'exact'` or `'none'`. A failure is reported as `MJX105`. |

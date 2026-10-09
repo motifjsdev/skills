@@ -56,8 +56,9 @@ this.motif.toggle();
 this.isVisible;
 ```
 `this.motif.options.hideStrategy` (set through the `options` JSX prop or in code): `'placeholder'` swaps
-in a comment node (fast), `'detach'` removes from DOM, `'auto'` (default) chooses detach in lists,
-placeholder otherwise.
+in a `<!--h-->` comment trace (fast), `'detach'` removes from DOM without a trace, `'auto'` (default) is
+`'placeholder'` everywhere, list rows included. A component that waits from the start is not built but its trace is
+already in place.
 
 `x-display={() => bool}` is the declarative form.
 

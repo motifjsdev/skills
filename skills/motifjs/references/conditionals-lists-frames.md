@@ -228,5 +228,6 @@ running `Application` (the pair talks over application events).
 ```
 `x-display` toggles visibility (with transitions) instead of disposing; use `&&` when you want
 the subtree destroyed. `hideStrategy` is given through the `options` prop (or set on `motif.options` in code): `'placeholder'`
-(comment node stays in place), `'detach'` (node removed), `'auto'` (default: `'detach'` for list
-rows, `'placeholder'` otherwise). On a plain DOM tag `options` writes no attribute.
+(a `<!--h-->` comment trace stays in place), `'detach'` (node removed without a trace), `'auto'` (default,
+same as `'placeholder'`). Every hidden or waiting component keeps a trace, list rows and components that wait from
+the start included; `controls.move` and list reordering carry the trace with the component. On a plain DOM tag `options` writes no attribute.

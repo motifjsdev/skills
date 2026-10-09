@@ -92,8 +92,8 @@
   Cached instances live until `app.router.evict(nameOrRoute)` (no argument → all) or `app.dispose()`.
 - `class.add(...)` works on SVG elements (`<svg class="ring">`).
 - `x:mounted` / `onMounted` observers are released on dispose even if the element never attaches.
-- `hideStrategy: 'auto'` picks `detach` inside `.map` lists; a hidden list row is removed from the DOM,
-  so `element.parentNode` may be `null` while hidden. `hideStrategy` is set through the `options` prop (`options={{ hideStrategy }}`) or `motif.options.hideStrategy` in code.
+- A hidden or waiting component (list rows included) is replaced by a `<!--h-->` trace, so
+  `element.parentNode` is `null` while hidden; with `hideStrategy: 'detach'` no trace is left either. `hideStrategy` is set through the `options` prop (`options={{ hideStrategy }}`) or `motif.options.hideStrategy` in code.
 - `Virtualization` rows that scroll out of view are detached (not disposed) and kept in an LRU
   cache (`cacheSize`); `refresh()`, `setData()` and an `autoRefresh` reload dispose them all. Do not
   hold external references to row components across a reload. In jsdom, fake `clientHeight`/`scrollTop` or nothing renders.
