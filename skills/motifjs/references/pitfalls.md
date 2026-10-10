@@ -152,7 +152,8 @@
   `super.<name>(...)`. TypeScript reports only clearly incompatible types (`style = 'red'`); it
   misses `any` fields, compatible-signature methods (`build() {}` leaves the component empty, a
   page's `dispose()` without `super` is never torn down on navigation, a parameterless `style()`
-  drops the tag's `style`) and boolean flags. The compiler warns `MJX015` at build time for an
+  drops the tag's `style`). The `is…` flags and `motif` are accessors, so redeclaring one as a
+  field (`declare` included) is a TS2610 error. The compiler warns `MJX015` at build time for an
   override that skips `super` on any path (`if (x) return;`, one-branch `if`, loop, `catch`,
   callback), in `.ts`/`.js` files too; only `if (this.isBuilt|isDisposed|isWait) return;` in
   `build` and `if (this.isDisposed) return;` in `dispose` are exempt. In development mode `MJX128` reports, once per class,
